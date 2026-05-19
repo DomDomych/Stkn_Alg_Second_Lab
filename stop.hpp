@@ -26,6 +26,7 @@ class StopList{
       void ByTheTime(int time);
       void Stopping(int hour,int minute);
       void ExportToTheFile(std::string filename);
+      void PrintTable(std::ostream &out);
       ~StopList(){
         end->next_stop = nullptr;
         Stop* current = start;
