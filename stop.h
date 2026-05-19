@@ -24,7 +24,8 @@ class StopList{
       void Back_Route();
       void Cycle();
       void ByTheTime(int time);
-      void After_N_Extended(int n);
+      void Stopping(int hour,int minute);
+      void ExportToTheFile(std::string filename);
       ~StopList(){
         end->next_stop = nullptr;
         Stop* current = start;
@@ -34,5 +35,6 @@ class StopList{
           current = next;
         }
       }
+
       
 };

@@ -1,6 +1,7 @@
 #include "stop.h"
 #include <iostream>
 #include <string>
+#include <fstream>
 
 void StopList::addstop(std::string name, int coord_x, int coord_y, int time)
 {
@@ -18,9 +19,13 @@ void StopList::addstop(std::string name, int coord_x, int coord_y, int time)
         end = new_stop;
     }
 }
-void StopList::Cycle(){
-    
+
+void StopList::Cycle()
+{
+    end->next_stop = start;
+    start->prev_stop = end;
 }
+
 Stop *StopList::After_N(int n)
 {
     Stop *current = start;
@@ -36,35 +41,90 @@ int StopList::Time()
 {
     int sum = 0;
     Stop *current = start;
-    while (true)
+    do
     {
-        if (current->next_stop == nullptr)
-            break;
         sum += current->time;
         current = current->next_stop;
-    }
-    return sum;
+    } while (current != nullptr && current != start);
 }
 
 void StopList::Forw_Route()
 {
+
     Stop *current = start;
-    while (current != nullptr)
+    do
     {
         std::cout << current->name << ' ';
         current = current->next_stop;
-    }
+    } while (current != nullptr && current != start);
     std::cout << '\n';
     return;
 }
 void StopList::Back_Route()
 {
     Stop *current = end;
-    while (current != nullptr)
+    do
     {
         std::cout << current->name << ' ';
         current = current->prev_stop;
-    }
+    } while (current != nullptr && current != end);
     std::cout << '\n';
     return;
+}
+
+void StopList::ByTheTime(int time)
+{
+    if (time < start->time)
+    {
+        std::cout << start->name << '\n';
+        std::cout << "Не Уедет С Первой Остановки\n";
+    }
+    Stop* current = start;
+    while (true)
+    {
+        if(time>=current->time){
+            std::cout<<current->name<<' ';
+            current = current->next_stop;
+            time-=current->time;
+        }
+        else{
+            std::cout<<'\n';
+            break;
+        }
+    }
+}
+
+void StopList::Stopping(int hour,int minute){
+    int now = hour*60+minute;
+    Stop* current = start;
+    do{
+        now = now+current->time;
+        int nhour = now/60,nminute=now%60;
+        if(nhour>23)nhour%=24;
+        std::cout<<current->name<<' '<<nhour<<':'<<nminute<<'\n';
+        current = current->next_stop;
+    }while(current!=nullptr && current!=start);
+}
+
+void StopList::ExportToTheFile(std::string filename){
+    std::ofstream file(filename);
+    Stop* current = start;
+    file<<"Первой Остановкой Является "<<'"'<<start->name<<'"\n';
+    file<<"Последней Остановкой Является "<<'"'<<end->name<<'"\n';
+    if(end->next_stop==start){
+        file<<"Маршрут Является Кольцевым\n";
+    }
+    else{
+        file<<"Маршрут Не Является Кольцевым\n";
+    }
+    file<<"Общее Время Маршрута В Одну Сторону:"<<Time()<<'\n\n';
+    file<<"Полный Список Остановок Со Времен Пути До Следующей Остановки:\n";
+    int i=0;
+    do{
+        file<<i<<')'<<current->name<<'\n';
+        i++;
+        current=current->next_stop;
+    }while (current!=nullptr && current!=start);
+    file.close();
+
 }
