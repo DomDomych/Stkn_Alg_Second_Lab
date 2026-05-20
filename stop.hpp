@@ -5,6 +5,7 @@ class Stop{
     public:
       std::string name;
       int coord_x=0,time=0,coord_y=0  ;
+      
       Stop* next_stop = nullptr, *prev_stop = nullptr;
       Stop() = default;
       Stop(std::string name,int coord_x,int coord_y,int time):name(name),coord_x(coord_x),coord_y(coord_y),time(time){}
@@ -27,6 +28,7 @@ class StopList{
       void Stopping(int hour,int minute);
       void ExportToTheFile(std::string filename);
       void PrintTable(std::ostream &out);
+      void Base64ExportToTheFile(std::string filename);
       ~StopList(){
         end->next_stop = nullptr;
         Stop* current = start;

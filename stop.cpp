@@ -1,8 +1,10 @@
 #include "stop.hpp"
+#include "base64.cpp"
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <iomanip>
+
 
 void StopList::addstop(std::string name, int coord_x, int coord_y, int time)
 {
@@ -176,4 +178,15 @@ void StopList::PrintTable(std::ostream &out)
         current = current->next_stop;
     }while(current != nullptr && current!=start);
 
+}
+
+void StopList::Base64ExportToTheFile(std::string filename){
+    std::ofstream file(filename);
+    Stop* current = start;
+    do{
+        std::string dom = create_line(current);
+        std::string s = Encode(dom);
+        file<<s<<'\n';
+    }while(current!=start && current!=nullptr);
+    file.close();
 }
