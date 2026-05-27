@@ -1,5 +1,5 @@
 #include "stop.hpp"
-#include "base64.cpp"
+#include "base64.hpp"
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -25,23 +25,34 @@ void StopList::addstop(std::string name, int coord_x, int coord_y, int time)
 
 void StopList::Cycle()
 {
+    if(start==nullptr || end==nullptr){
+        std::cout<<"Маршрут Пуст\n";
+        return;
+    }
     end->next_stop = start;
     start->prev_stop = end;
 }
 
 Stop *StopList::After_N(int n)
 {
+    if(start==nullptr || n<0){
+        return nullptr;
+    }
+
     Stop *current = start;
-    while (n)
+    while (n>0 && current!=nullptr)
     {
-        n--;
         current = current->next_stop;
+        n--;
     }
     return current;
 }
 
 int StopList::Time()
 {
+    if(start==nullptr){
+        return 0;
+    }
     int sum = 0;
     Stop *current = start;
     do
@@ -54,7 +65,10 @@ int StopList::Time()
 
 void StopList::Forw_Route()
 {
-
+    if(start==nullptr){
+        std::cout<<"Маршрут Пуст\n";
+        return;
+    }
     Stop *current = start;
     do
     {
@@ -66,6 +80,10 @@ void StopList::Forw_Route()
 }
 void StopList::Back_Route()
 {
+    if(end==nullptr){
+        std::cout<<"Маршрут Пуст\n";
+        return;
+    }
     Stop *current = end;
     do
     {
@@ -78,19 +96,24 @@ void StopList::Back_Route()
 
 void StopList::ByTheTime(int time)
 {
+    if(start==nullptr){
+        std::cout<<"Маршрут Пуст\n";
+        return;
+    }
     if (time < start->time)
     {
         std::cout << start->name << '\n';
         std::cout << "Не Уедет С Первой Остановки\n";
+        return;
     }
     Stop *current = start;
     while (true)
     {
-        if (time >= current->time)
+        if (current!=nullptr && time >= current->time)
         {
             std::cout << current->name << ' ';
-            current = current->next_stop;
             time -= current->time;
+            current=current->next_stop;
         }
         else
         {
@@ -102,15 +125,25 @@ void StopList::ByTheTime(int time)
 
 void StopList::Stopping(int hour, int minute)
 {
+    if(start==nullptr){
+        std::cout<<"Маршрут Пуст\n";
+        return;
+    }
     int now = hour * 60 + minute;
     Stop *current = start;
+
     do
     {
-        std::cout << current->name << ' ' << (current->time / 60) % 24 << ':' << current->time % 60 << '\n';
-        now = now + current->time;
-        int nhour = now / 60, nminute = now % 60;
-        if (nhour > 23)
-            nhour %= 24;
+        int nhour = (now / 60) % 24;
+        int nminute = now % 60;
+
+        std::cout << current->name << ' '
+                  << nhour << ':';
+
+        if (nminute < 10) std::cout << '0';
+        std::cout << nminute << '\n';
+
+        now += current->time;
         current = current->next_stop;
     } while (current != nullptr && current != start);
 }
@@ -118,6 +151,10 @@ void StopList::Stopping(int hour, int minute)
 void StopList::ExportToTheFile(std::string filename)
 {
     std::ofstream file(filename);
+    if(start==nullptr){
+        file<<"Маршрут Пуст\n";
+        return;
+    }
     Stop *current = start;
     file << "Первой Остановкой Является " << '"' << start->name << '"\n';
     file << "Последней Остановкой Является " << '"' << end->name << '"\n';
@@ -183,10 +220,16 @@ void StopList::PrintTable(std::ostream &out)
 void StopList::Base64ExportToTheFile(std::string filename){
     std::ofstream file(filename);
     Stop* current = start;
+    if(current == nullptr){
+        file<<"Маршрут Пуст\n";
+        file.close();
+        return;
+    }
     do{
         std::string dom = create_line(current);
         std::string s = Encode(dom);
         file<<s<<'\n';
+        current =  current->next_stop;
     }while(current!=start && current!=nullptr);
     file.close();
 }

@@ -1,5 +1,6 @@
 #include <string>
 #include "stop.hpp"
+#include "base64.hpp"
 
 std::string create_line(Stop* current){
     std::string line = 
@@ -7,7 +8,6 @@ std::string create_line(Stop* current){
                         std::to_string(current->coord_x)+" "+
                         std::to_string(current->coord_y)+" "+
                         std::to_string(current->time);
-    line.push_back('\n');
     return line;
 }
 

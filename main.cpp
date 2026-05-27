@@ -11,5 +11,4 @@ int main(){
     std::ofstream file("test2.txt");
     A.PrintTable(file);
     file.close();
-
 }
