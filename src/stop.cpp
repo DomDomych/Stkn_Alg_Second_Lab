@@ -172,8 +172,8 @@ void StopList::ExportToTheFile(std::string filename)
         return;
     }
     Stop *current = start;
-    file << "Первой Остановкой Является " << '"' << start->name << '"\n';
-    file << "Последней Остановкой Является " << '"' << end->name << '"\n';
+    file << "Первой Остановкой Является " << '"' << start->name <<'"'<<'\n';
+    file << "Последней Остановкой Является " << '"' << end->name <<'"'<<'\n';
     if (end->next_stop == start)
     {
         file << "Маршрут Является Кольцевым\n";
@@ -182,9 +182,9 @@ void StopList::ExportToTheFile(std::string filename)
     {
         file << "Маршрут Не Является Кольцевым\n";
     }
-    file << "Общее Время Маршрута В Одну Сторону:" << Time() << '\n\n';
+    file << "Общее Время Маршрута В Одну Сторону: " << Time() << '\n';
     file << "Полный Список Остановок Со Времен Пути До Следующей Остановки:\n";
-    int i = 0;
+    int i = 1;
     do
     {
         file << i << ')' << current->name << '\n';
