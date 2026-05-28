@@ -156,6 +156,7 @@ TEST(ByTheTimeTests,CommonCase)
     EXPECT_NE(result.find("Gymnasium"),std::string::npos);
     EXPECT_NE(result.find("Church"),std::string::npos);
     EXPECT_NE(result.find("Market"),std::string::npos);
+    EXPECT_NE(result.find("Home"),std::string::npos);
 
 
 }
