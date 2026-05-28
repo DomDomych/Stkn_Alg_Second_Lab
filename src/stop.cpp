@@ -108,7 +108,7 @@ void StopList::ByTheTime(int time)
     if (time < start->time)
     {
         std::cout << start->name << '\n';
-        std::cout << "Не Уедет С Первой Остановки\n";
+        std::cout << "Не Доедет До Второй Остановки\n";
         return;
     }
     Stop *current = start;
@@ -122,7 +122,9 @@ void StopList::ByTheTime(int time)
         }
         else
         {
-            std::cout<<current->name;
+            if(current!=nullptr){
+                std::cout<<current->name;
+            }
             std::cout << '\n';
             break;
         }
