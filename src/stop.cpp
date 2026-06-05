@@ -5,6 +5,22 @@
 #include <fstream>
 #include <iomanip>
 
+
+StopList::~StopList()
+{
+   if (end != nullptr)
+   {
+     end->next_stop = nullptr;
+   }
+
+   Stop *current = start;
+   while (current != nullptr)
+   {
+     Stop *next = current->next_stop;
+     delete current;
+     current = next;
+    }
+}
 void StopList::addstop(std::string name, int coord_x, int coord_y, int time)
 {
     Stop *new_stop = new Stop(name, coord_x, coord_y, time);

@@ -28,6 +28,8 @@ private:
 public:
   // Стандартный Конструктор
   StopList() = default;
+  // Деструктор
+  ~StopList();
   // Добавить Остановку По Всем Параметрам, Которые Ей Присущи
   void addstop(std::string name, int coord_x, int coord_y, int time);
   // Функция Возвращает Остановку, На Которой Окажется Автобус
@@ -80,19 +82,4 @@ public:
   //Если Маршрут Пуст, То Выведется
   //Соответствующее Сообщение В Файл
   void Base64ExportToTheFile(std::string filename);
-  ~StopList()
-  {
-    if (end != nullptr)
-    {
-      end->next_stop = nullptr;
-    }
-
-    Stop *current = start;
-    while (current != nullptr)
-    {
-      Stop *next = current->next_stop;
-      delete current;
-      current = next;
-    }
-  }
 };
